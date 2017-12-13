@@ -1,0 +1,3 @@
+[submodule "j2bugzilla"]
+	path = j2bugzilla
+	url = https://github.com/skywalker-11/j2bugzilla.git

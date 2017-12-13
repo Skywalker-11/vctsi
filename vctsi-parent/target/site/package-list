@@ -1,0 +1,14 @@
+org.vctsi
+org.vctsi.bugzilla
+org.vctsi.debug.its
+org.vctsi.debug.vcs
+org.vctsi.git
+org.vctsi.github
+org.vctsi.gitlab
+org.vctsi.internal
+org.vctsi.internal.its
+org.vctsi.internal.tasks
+org.vctsi.internal.vcs
+org.vctsi.jira
+org.vctsi.svn
+org.vctsi.utils

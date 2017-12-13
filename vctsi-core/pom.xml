@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.vctsi</groupId>
+        <artifactId>vctsi-parent</artifactId>
+        <version>1.1</version>
+        <relativePath>../vctsi-parent</relativePath>
+    </parent>
+
+    <artifactId>vctsi-core</artifactId>
+    <version>1.1</version>
+    <packaging>jar</packaging>
+    <developers>
+        <developer>
+            <id>Skywalker-11</id>
+            <name>Michael Pietsch</name>
+            <email>git.michael@mi-pietsch.de</email>
+            <url>https://github.com/skywalker-11/</url>
+        </developer>
+    </developers>
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <skip.tests>true</skip.tests>
+        <jackson.version>2.7.0</jackson.version>
+        <junit.version>4.12</junit.version>
+        <gitlab.version>1.2.6</gitlab.version>
+        <mariadb.jdbc.version>1.5.4</mariadb.jdbc.version>
+        <slf4j.version>1.7.21</slf4j.version>
+        <eclipse.jgit.version>4.4.1.201607150455-r</eclipse.jgit.version>
+        <jira.rest.java.client.version>4.0.0</jira.rest.java.client.version>
+        <github.api.version>1.79</github.api.version>
+        <svnkit.version>1.9.0-r10609-atlassian-hosted</svnkit.version>
+        <output.dir>../vctsi-parent/target/</output.dir>
+    </properties>
+    <repositories>
+        <repository>
+            <id>atlassian-public</id>
+            <url>https://m2proxy.atlassian.com/repository/public</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>warn</checksumPolicy>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+                <checksumPolicy>warn</checksumPolicy>
+            </releases>
+        </repository>
+        <repository>
+            <id>atlassian.com</id>
+            <name>Atlassian</name>
+            <url>http://maven.atlassian.com/public</url>
+            <layout>default</layout>
+        </repository>
+    </repositories>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>org.vctsi.Main</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <outputDirectory>${output.dir}/</outputDirectory>
+                    <appendAssemblyId>true</appendAssemblyId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.19.1</version>
+                <configuration>
+                    <skipTests>${skip.tests}</skipTests>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <configuration>
+                    <mainClass>org.vctsi.Main</mainClass>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>1.14</version>
+            </plugin>
+        </plugins>
+    </build>
+    <dependencies>
+        <!--tests-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-nop</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <!--Annotations-->
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>RELEASE</version>
+        </dependency>
+
+        <!--JSON Output-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
+        <!--Git-->
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>${eclipse.jgit.version}</version>
+            <!-- exclusions needed to use jira-rest-java-client-core-->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpclient-cache</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.httpcomponents</groupId>
+                    <artifactId>httpclient</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--Gitlab-->
+        <dependency>
+            <groupId>org.gitlab</groupId>
+            <artifactId>java-gitlab-api</artifactId>
+            <version>${gitlab.version}</version>
+        </dependency>
+
+        <!--Github-->
+        <dependency>
+            <groupId>org.kohsuke</groupId>
+            <artifactId>github-api</artifactId>
+            <version>${github.api.version}</version>
+        </dependency>
+
+        <!--SVN-->
+        <dependency>
+            <groupId>org.tmatesoft.svnkit</groupId>
+            <artifactId>svnkit</artifactId>
+            <version>${svnkit.version}</version>
+        </dependency>
+
+        <!--Jira-->
+        <dependency>
+            <groupId>com.atlassian.jira</groupId>
+            <artifactId>jira-rest-java-client-core</artifactId>
+            <version>${jira.rest.java.client.version}</version>
+        </dependency>
+        <!--https://answers.atlassian.com/questions/38528888/classnotfoundexception-com.atlassian.fugue.effect-after-upgrade-jrjc-to-4.0.0-from-3.0.0-->
+        <dependency>
+            <groupId>com.atlassian.fugue</groupId>
+            <artifactId>fugue</artifactId>
+            <version>2.2.1</version>
+        </dependency>
+
+        <!--Bugzilla (local package)-->
+        <dependency>
+            <groupId>com.j2bugzilla</groupId>
+            <artifactId>j2bugzilla</artifactId>
+            <version>2.3.1-vctsi</version>
+        </dependency>
+
+        <!--JDBC-->
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>${mariadb.jdbc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql-jdbc42</artifactId>
+            <version>9.4.1208-atlassian-hosted</version>
+        </dependency>
+    </dependencies>
+    <scm>
+        <connection>scm:git:https://github.com/skywalker-11/vctsi.git</connection>
+        <developerConnection>scm:git:https://github.com/skywalker-11/vctsi.git</developerConnection>
+        <url>https://github.com/skywalker-11/vctsi/</url>
+    </scm>
+
+    <url>https://github.com/skywalker-11/vctsi/</url>
+</project>
